@@ -1,59 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Raylib_cs;
-
-enum Direction
-{
-    Left,
-    Right,
-    Up,
-    Down
-}
 
 namespace main
 {
     internal class Character
     {
-        private string? name;
+        private Raylib_cs.Rectangle charRect;
+        private string name;
         public Direction Facing { get; set; }
 
-        public string? Name
+        public string Name
         {
             get => name;
             set => name = value == null ? throw new Exception("Invalid name input") :
                 value.Length > 255 ? throw new Exception("Name too long") : value;
         }
 
-        public UInt16 Health { get; set; }
+        public ushort Health { get; set; }
+        public ulong Score { get; set; }
 
-        public UInt64 Score { get; set; }
-
-        public Character(string? name, Direction facing, UInt16 health, UInt64 score)
+        public Character(string name, Direction facing, ushort health, ulong score)
         {
             Name = name;
             Facing = facing;
             Health = health;
             Score = score;
+
+            var pos = new Point(Random.Shared.Next(0, Program.width), Random.Shared.Next(0, Program.height));
+            const int width = 10;
+            const int height = 10;
+            charRect = new Raylib_cs.Rectangle(pos.X, pos.Y, width, height);
         }
 
         public Character() : this("Greg", Direction.Up, 100, 0) { }
 
-        public void InitCharacter(Character character)
+        public void UpdatePos(bool W, bool S, bool A, bool D)
         {
-            var pos = new Point(Random.Shared.Next(0, Program.width)-10, Random.Shared.Next(0, Program.height)-10);
-            const int width = 10;
-            const int height = 10;
-            Raylib.DrawLine(pos.X - width / 2, pos.Y + height / 2, pos.X + width / 2, pos.Y + height / 2, Raylib_cs.Color.DarkPurple);
-            Raylib.DrawLine(pos.X - width / 2, pos.Y - height / 2, pos.X + width / 2, pos.Y - height / 2, Raylib_cs.Color.DarkPurple);
-            Raylib.DrawLine(pos.X - width / 2, pos.Y + height / 2, pos.X + width / 2, pos.Y - height / 2, Raylib_cs.Color.DarkPurple);
-            Raylib.DrawLine(pos.X + width / 2, pos.Y + height / 2, pos.X - width / 2, pos.Y + height / 2, Raylib_cs.Color.DarkPurple);
+            int speed = 5;
+            if (W) charRect.Y -= speed;
+            if (S) charRect.Y += speed;
+            if (A) charRect.X -= speed;
+            if (D) charRect.X += speed;
+        }
 
+        public void Draw()
+        {
+            Raylib.DrawRectangleRec(charRect, Raylib_cs.Color.DarkPurple);
         }
     }
 }
