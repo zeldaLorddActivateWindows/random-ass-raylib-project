@@ -12,8 +12,8 @@ namespace main
     }
     internal class Program
     {
-        public static int width = 800;
-        public static int height = 480;
+        public static int width = 1000;
+        public static int height = 1000;
 
         static void Main(string[] args)
         {
@@ -26,15 +26,12 @@ namespace main
 
             while (!Raylib.WindowShouldClose())
             {
-                // Clear the screen
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Raylib_cs.Color.Black);
-
-                // Draw the crosshair
+                Raylib.DrawText($"Score:{character.Score}", 10, 10, (int) 10, Raylib_cs.Color.RayWhite);
                 Raylib.DrawLine(center.X + width / 2, center.Y, center.X - width / 2, center.Y, Raylib_cs.Color.Gold);
                 Raylib.DrawLine(center.X, center.Y + height / 2, center.X, center.Y - height / 2, Raylib_cs.Color.Gold);
 
-                // Update character position
                 character.UpdatePos(
                     Raylib.IsKeyDown(KeyboardKey.W),
                     Raylib.IsKeyDown(KeyboardKey.S),
@@ -42,8 +39,6 @@ namespace main
                     Raylib.IsKeyDown(KeyboardKey.D)
                 );
 
-                // Draw the character
-                character.Draw();
 
                 Raylib.EndDrawing();
             }

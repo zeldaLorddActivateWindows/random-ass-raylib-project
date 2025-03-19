@@ -38,13 +38,14 @@ namespace main
         public void UpdatePos(bool W, bool S, bool A, bool D)
         {
             int speed = 5;
-            if (W) charRect.Y -= speed;
-            if (S) charRect.Y += speed;
-            if (A) charRect.X -= speed;
-            if (D) charRect.X += speed;
+            if (W && charRect.Y - speed >= 0) charRect.Y -= speed;
+            if (S && charRect.Y + charRect.Height + speed <= Program.height) charRect.Y += speed;
+            if (A && charRect.X - speed >= 0) charRect.X -= speed;
+            if (D && charRect.X + charRect.Width + speed <= Program.width) charRect.X += speed;
+            Draw();
         }
 
-        public void Draw()
+        private void Draw()
         {
             Raylib.DrawRectangleRec(charRect, Raylib_cs.Color.DarkPurple);
         }
