@@ -1,31 +1,27 @@
-﻿using System;
+﻿using Raylib_cs;
 using System.Drawing;
-using Raylib_cs;
 
-namespace main
+internal class Enemy
 {
-    internal class Enemy
+    public Raylib_cs.Rectangle EnemyRect { get; private set; }
+    public float Velocity { get; private set; }
+
+    public Enemy(int size, int xPos, float velocity)
     {
-        public Raylib_cs.Rectangle EnemyRect { get; private set; }
-        public float Velocity { get; private set; }
+        var pos = new Point(xPos, -size); 
+        EnemyRect = new Raylib_cs.Rectangle(pos.X, pos.Y, size, size);
+        Velocity = velocity;
+    }
 
-        public Enemy(int size, int xPos, float velocity)
-        {
-            var pos = new Point(xPos, Program.height);
-            EnemyRect = new Raylib_cs.Rectangle(pos.X, pos.Y, size, size);
-            Velocity = velocity;
-        }
+    public void Update()
+    {
+        var rect = EnemyRect;
+        rect.Y += Velocity;
+        EnemyRect = rect;
+    }
 
-        public void Update()
-        {
-            var rect = EnemyRect;
-            rect.Y += Velocity;
-            EnemyRect = rect;
-        }
-
-        public void Draw()
-        {
-            Raylib.DrawRectangleRec(EnemyRect, Raylib_cs.Color.DarkPurple);
-        }
+    public void Draw()
+    {
+        Raylib.DrawRectangleRec(EnemyRect, Raylib_cs.Color.DarkPurple);
     }
 }

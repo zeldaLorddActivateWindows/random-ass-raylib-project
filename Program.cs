@@ -40,6 +40,16 @@ namespace main
 
                 enemies.RemoveAll(enemy => enemy.EnemyRect.Y > height);
 
+                foreach (var enemy in enemies)
+                {
+                    if (character.CheckCollision(enemy.EnemyRect))
+                    {
+                        character.Score++;
+                        enemies.Remove(enemy);
+                        break; 
+                    }
+                }
+
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Raylib_cs.Color.Black);
 
@@ -59,6 +69,8 @@ namespace main
                     Raylib.IsKeyDown(KeyboardKey.A),
                     Raylib.IsKeyDown(KeyboardKey.D)
                 );
+
+                character.Draw();
 
                 Raylib.EndDrawing();
             }

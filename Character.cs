@@ -11,7 +11,13 @@ namespace main
 
         public Character()
         {
-            var pos = new Point(Program.width / 2, Program.height / 2);
+            InitCharacter();
+        }
+
+        public void InitCharacter()
+        {
+            var random = new Random();
+            var pos = new Point(random.Next(0, Program.width - 40), random.Next(0, Program.height - 40));
             CharacterRect = new Raylib_cs.Rectangle(pos.X, pos.Y, 40, 40);
         }
 
@@ -21,8 +27,8 @@ namespace main
 
             if (moveUp) newRect.Y -= Speed;
             if (moveDown) newRect.Y += Speed;
-            if (moveLeft) newRect.Y -= Speed;
-            if (moveRight) newRect.Y += Speed;
+            if (moveLeft) newRect.X -= Speed;
+            if (moveRight) newRect.X += Speed;
 
             newRect.X = Math.Clamp(newRect.X, 0, Program.width - newRect.Width);
             newRect.Y = Math.Clamp(newRect.Y, 0, Program.height - newRect.Height);
