@@ -8,7 +8,7 @@ internal class Enemy
 
     public Enemy(int size, int xPos, float velocity)
     {
-        var pos = new Point(xPos, -size); 
+        var pos = new Point(xPos, -size);
         EnemyRect = new Raylib_cs.Rectangle(pos.X, pos.Y, size, size);
         Velocity = velocity;
     }
