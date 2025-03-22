@@ -7,13 +7,13 @@ namespace main
 {
     internal class Program
     {
+        static float pointReq = 100f;
         public static int width = 1000;
         public static int height = 1000;
 
         static void Main(string[] args)
         {
-            var enemiesKilled = 0;
-            var pointReq = 100;
+            var kd = 1f;
             var title = "Game";
             var character = new Character();
             var center = new Point(width / 2, height / 2);
@@ -49,7 +49,7 @@ namespace main
                         var value = (int)((20 - enemy.EnemyRect.Width) * 2);
                         character.Score += value;
                         enemies.Remove(enemy);
-                        enemiesKilled++;
+                        character.Kills++;
                         break;
                     }
                 }
@@ -57,8 +57,7 @@ namespace main
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Raylib_cs.Color.Black);
 
-                Raylib.DrawText($"Score: {character.Score:00000}", 10, 10, 20, Raylib_cs.Color.RayWhite);
-                Raylib.DrawText($"Kills: {enemiesKilled}", 10, 35, 20, Raylib_cs.Color.RayWhite);
+                DisplayInfo(character);
 
                 Raylib.DrawLine(center.X + width / 2, center.Y, center.X - width / 2, center.Y, Raylib_cs.Color.Gold);
                 Raylib.DrawLine(center.X, center.Y + height / 2, center.X, center.Y - height / 2, Raylib_cs.Color.Gold);
@@ -77,16 +76,26 @@ namespace main
 
                 character.Draw();
 
-                if (enemiesKilled % 10 == 0)
+                if (character.Score > pointReq)
                 {
-                    character.Speed += (int)(5 / (character.Score / 500f + 1));
-                    pointReq += (int)(pointReq * 0.25);
+                    character.Speed += Math.Log(5 / ((double)character.Score / 1000 + 1f));
+                    pointReq += (((pointReq * 0.25f)) * kd)+100;
+                    kd += 0.025f;
                 }
 
                 Raylib.EndDrawing();
             }
-
+            
             Raylib.CloseWindow();
         }
+
+        static void DisplayInfo(Character character)
+        {
+            Raylib.DrawText($"Score: {character.Score:00000}", 10, 10, 20, Raylib_cs.Color.RayWhite);
+            Raylib.DrawText($"Kills: {character.Kills}", 10, 35, 20, Raylib_cs.Color.Red);
+            Raylib.DrawText($"Kills until next upgrade: {(int)pointReq-character.Score}", 10, 60, 20, Raylib_cs.Color.Gold);
+            Raylib.DrawText($"Additional speed: +{Math.Round(character.Speed-5,1)}", 10, 85, 20, Raylib_cs.Color.SkyBlue);
+        }
+
     }
 }

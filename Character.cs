@@ -7,8 +7,9 @@ namespace main
     {
         public int Score { get; set; } = 0;
         public Raylib_cs.Rectangle CharacterRect { get; private set; }
-        public int Speed { get; set; } = 5;
+        public double Speed { get; set; } = 5;
 
+        public int Kills { get; set; } = 0;
         public Character()
         {
             InitCharacter();
@@ -25,10 +26,10 @@ namespace main
         {
             var newRect = CharacterRect;
 
-            if (moveUp) newRect.Y -= Speed;
-            if (moveDown) newRect.Y += Speed;
-            if (moveLeft) newRect.X -= Speed;
-            if (moveRight) newRect.X += Speed;
+            if (moveUp) newRect.Y -= (float)Speed;
+            if (moveDown) newRect.Y += (float)Speed;
+            if (moveLeft) newRect.X -= (float)Speed;
+            if (moveRight) newRect.X += (float)Speed;
 
             newRect.X = Math.Clamp(newRect.X, 0, Program.width - newRect.Width);
             newRect.Y = Math.Clamp(newRect.Y, 0, Program.height - newRect.Height);
