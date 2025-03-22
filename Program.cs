@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using Raylib_cs;
 
 namespace main
 {
     internal class Program
     {
-        static float pointReq = 10f;
+        static float pointReq = 100f;
         public static int width = 1000;
         public static int height = 1000;
 
@@ -17,7 +19,7 @@ namespace main
             var title = "Game";
             var character = new Character();
             var center = new Point(width / 2, height / 2);
-            var enemies = new List<Enemy>();
+            var enemies = new ConcurrentQueue<Enemy>();
             var spawnTimer = 0;
             bool isPaused = false;
             Raylib.InitWindow(width, height, title);
@@ -25,6 +27,21 @@ namespace main
 
             float cPointReq = pointReq;
             float cSpeedIncrease = 0f;
+
+            character.EnemyKilled += (sender, e) =>
+            {
+                var value = (int)((20 - e.EnemySize) * 2);
+                character.Score += value;
+                character.Kills++;
+
+                if (character.Score > cPointReq)
+                {
+                    cPointReq += (((cPointReq * 0.25f)) * kd) + 100;
+                    kd += 0.025f;
+                    cSpeedIncrease = (float)Math.Log(5 / ((double)character.Kills / 100 + 1f));
+                    character.Speed += cSpeedIncrease;
+                }
+            };
 
             while (!Raylib.WindowShouldClose())
             {
@@ -42,40 +59,38 @@ namespace main
                         var size = Raylib.GetRandomValue(5, 20);
                         var xPos = Raylib.GetRandomValue(0, width - size);
                         var velocity = (size * -1) * 0.5f + 21 + (character.Kills / 10);
-                        enemies.Add(new Enemy(size, xPos, velocity));
+                        enemies.Enqueue(new Enemy(size, xPos, velocity));
                     }
 
+                    Parallel.ForEach(enemies, enemy => enemy.Update());
+
+
+                    var enemiesToRemove = new List<Enemy>();
                     foreach (var enemy in enemies)
                     {
-                        enemy.Update();
+                        if (enemy.EnemyRect.Y > height)
+                        {
+                            enemiesToRemove.Add(enemy);
+                        }
+                    }
+                    foreach (var enemy in enemiesToRemove)
+                    {
+                        enemies.TryDequeue(out _);
                     }
 
-                    enemies.RemoveAll(enemy => enemy.EnemyRect.Y > height);
-
-                    foreach (var enemy in enemies)
+                    Parallel.ForEach(enemies, enemy =>
                     {
                         if (character.CheckCollision(enemy.EnemyRect))
                         {
-                            var value = (int)((20 - enemy.EnemyRect.Width) * 2);
-                            character.Score += value;
-                            enemies.Remove(enemy);
-                            character.Kills++;
-                            break;
+                            character.OnEnemyKilled(enemy.EnemyRect.Width);
+                            enemies.TryDequeue(out _);
                         }
-                    }
-
-                    if (character.Kills > cPointReq)
-                    {
-                        cPointReq += (((cPointReq * 0.25f)) * kd) + 10;
-                        kd += 0.025f;
-                        cSpeedIncrease = (float)Math.Log(5 / ((double)character.Kills / 100 + 1f));
-                        character.Speed += cSpeedIncrease;
-                    }
+                    });
 
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Raylib_cs.Color.Black);
 
-                    DisplayInfo(character);
+                    DisplayInfo(character, cPointReq);
 
                     Raylib.DrawLine(center.X + width / 2, center.Y, center.X - width / 2, center.Y, Raylib_cs.Color.Gold);
                     Raylib.DrawLine(center.X, center.Y + height / 2, center.X, center.Y - height / 2, Raylib_cs.Color.Gold);
@@ -103,21 +118,20 @@ namespace main
                     DisplayPauseInfo(character);
                     Raylib.EndDrawing();
                 }
-                pointReq = cPointReq;
             }
 
             Raylib.CloseWindow();
         }
 
-        static void DisplayInfo(Character character)
+        protected static void DisplayInfo(Character character, float cPointReq)
         {
             Raylib.DrawText($"Score: {character.Score:00000}", 10, 10, 20, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Kills: {character.Kills}", 10, 35, 20, Raylib_cs.Color.Red);
-            Raylib.DrawText($"Kills until next upgrade: {(int)pointReq - character.Kills}", 10, 60, 20, Raylib_cs.Color.Gold);
+            Raylib.DrawText($"Points until next upgrade: {(int)cPointReq - character.Score}", 10, 60, 20, Raylib_cs.Color.Gold);
             Raylib.DrawText($"Additional speed: +{Math.Round(character.Speed - 5, 1)}", 10, 85, 20, Raylib_cs.Color.SkyBlue);
         }
 
-        static void DisplayPauseInfo(Character character)
+        protected static void DisplayPauseInfo(Character character) //protected modifier for fun idk lol
         {
             Raylib.DrawText("PAUSED", width / 2 - 50, height / 2 - 100, 40, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Score: {character.Score}", width / 2 - 50, height / 2 - 50, 20, Raylib_cs.Color.RayWhite);

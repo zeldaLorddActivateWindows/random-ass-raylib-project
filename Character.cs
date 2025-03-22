@@ -10,6 +10,8 @@ internal class Character
     public int Kills { get; set; } = 0;
     public int Health { get; set; } = 100;
 
+    public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
+
     public Character()
     {
         InitCharacter();
@@ -45,5 +47,10 @@ internal class Character
     public bool CheckCollision(Raylib_cs.Rectangle otherRect)
     {
         return Raylib.CheckCollisionRecs(CharacterRect, otherRect);
+    }
+
+    public void OnEnemyKilled(float enemySize)
+    {
+        EnemyKilled?.Invoke(this, new EnemyKilledEventArgs(enemySize));
     }
 }
