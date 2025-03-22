@@ -10,6 +10,7 @@ namespace main
         public double Speed { get; set; } = 5;
 
         public int Kills { get; set; } = 0;
+        public int Health { get; set; } = 100;
         public Character()
         {
             InitCharacter();
