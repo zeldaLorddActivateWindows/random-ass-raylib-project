@@ -7,7 +7,7 @@ namespace main
 {
     internal class Program
     {
-        static float pointReq = 100f;
+        static float pointReq = 10f;
         public static int width = 1000;
         public static int height = 1000;
 
@@ -22,6 +22,9 @@ namespace main
             bool isPaused = false;
             Raylib.InitWindow(width, height, title);
             Raylib.SetTargetFPS(60);
+
+            float cPointReq = pointReq;
+            float cSpeedIncrease = 0f;
 
             while (!Raylib.WindowShouldClose())
             {
@@ -38,7 +41,7 @@ namespace main
                         spawnTimer = 0;
                         var size = Raylib.GetRandomValue(5, 20);
                         var xPos = Raylib.GetRandomValue(0, width - size);
-                        var velocity = (size * -1) * 0.5f + 21 + (character.Score / 100);
+                        var velocity = (size * -1) * 0.5f + 21 + (character.Kills / 10);
                         enemies.Add(new Enemy(size, xPos, velocity));
                     }
 
@@ -61,15 +64,21 @@ namespace main
                         }
                     }
 
+                    if (character.Kills > cPointReq)
+                    {
+                        cPointReq += (((cPointReq * 0.25f)) * kd) + 10;
+                        kd += 0.025f;
+                        cSpeedIncrease = (float)Math.Log(5 / ((double)character.Kills / 100 + 1f));
+                        character.Speed += cSpeedIncrease;
+                    }
+
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Raylib_cs.Color.Black);
 
                     DisplayInfo(character);
 
-                    Raylib.DrawLine(center.X + width / 2, center.Y, center.X - width / 2, center.Y,
-                        Raylib_cs.Color.Gold);
-                    Raylib.DrawLine(center.X, center.Y + height / 2, center.X, center.Y - height / 2,
-                        Raylib_cs.Color.Gold);
+                    Raylib.DrawLine(center.X + width / 2, center.Y, center.X - width / 2, center.Y, Raylib_cs.Color.Gold);
+                    Raylib.DrawLine(center.X, center.Y + height / 2, center.X, center.Y - height / 2, Raylib_cs.Color.Gold);
 
                     foreach (var enemy in enemies)
                     {
@@ -85,13 +94,6 @@ namespace main
 
                     character.Draw();
 
-                    if (character.Score > pointReq)
-                    {
-                        character.Speed += Math.Log(5 / ((double)character.Score / 1000 + 1f));
-                        pointReq += (((pointReq * 0.25f)) * kd) + 100;
-                        kd += 0.025f;
-                    }
-
                     Raylib.EndDrawing();
                 }
                 else
@@ -101,6 +103,7 @@ namespace main
                     DisplayPauseInfo(character);
                     Raylib.EndDrawing();
                 }
+                pointReq = cPointReq;
             }
 
             Raylib.CloseWindow();
@@ -110,7 +113,7 @@ namespace main
         {
             Raylib.DrawText($"Score: {character.Score:00000}", 10, 10, 20, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Kills: {character.Kills}", 10, 35, 20, Raylib_cs.Color.Red);
-            Raylib.DrawText($"Kills until next upgrade: {(int)pointReq - character.Score}", 10, 60, 20, Raylib_cs.Color.Gold);
+            Raylib.DrawText($"Kills until next upgrade: {(int)pointReq - character.Kills}", 10, 60, 20, Raylib_cs.Color.Gold);
             Raylib.DrawText($"Additional speed: +{Math.Round(character.Speed - 5, 1)}", 10, 85, 20, Raylib_cs.Color.SkyBlue);
         }
 
