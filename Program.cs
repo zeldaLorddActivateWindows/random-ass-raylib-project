@@ -10,8 +10,8 @@ namespace main
     internal class Program
     {
         static float pointReq = 100f;
-        public static int width = 1000;
-        public static int height = 1000;
+        public static int width = Raylib.GetScreenHeight()*-1;
+        public static int height = Raylib.GetScreenWidth()*-1;
 
         static void Main(string[] args)
         {
