@@ -11,7 +11,7 @@ namespace main
     {
         static float pointReq = 100f;
         public static int width = 1000;
-        public static int height = 1000;
+        public static int height = 800;
 
         static void Main(string[] args)
         {
