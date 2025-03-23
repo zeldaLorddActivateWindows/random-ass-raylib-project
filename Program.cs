@@ -10,8 +10,8 @@ namespace main
     internal class Program
     {
         static float pointReq = 100f;
-        public static int width = Raylib.GetScreenHeight()*-1;
-        public static int height = Raylib.GetScreenWidth()*-1;
+        public static int width = 1000;
+        public static int height = 1000;
 
         static void Main(string[] args)
         {
@@ -40,6 +40,7 @@ namespace main
                     kd += 0.025f;
                     cSpeedIncrease = (float)Math.Log(5 / ((double)character.Kills / 100 + 1f));
                     character.Speed += cSpeedIncrease;
+                    character.Health += (int) ((float)Math.Pow(Math.E, -character.Score*0.01) * Math.Log(5 / (float)character.Kills / 1000 +1f));
                 }
             };
 
@@ -117,6 +118,11 @@ namespace main
                     Raylib.ClearBackground(Raylib_cs.Color.Black);
                     DisplayPauseInfo(character);
                     Raylib.EndDrawing();
+                }
+
+                foreach (var enemy in enemies)
+                {
+                    if (enemy.Pos.Y < 0) character.Health =- (int)((enemy.EnemyRect.Width)*0.5f);
                 }
             }
 

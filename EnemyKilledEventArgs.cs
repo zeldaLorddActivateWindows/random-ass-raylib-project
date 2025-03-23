@@ -13,6 +13,7 @@ namespace main
         public EnemyKilledEventArgs(float enemySize)
         {
             EnemySize = enemySize;
+            
         }
     }
 }
