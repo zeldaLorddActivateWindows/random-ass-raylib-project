@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "uXv1rZSliuQ=",
+  "dgSpecHash": "yYi6NwWsA+E=",
   "success": true,
-  "projectFilePath": "C:\\Users\\benja\\OneDrive\\Desktop\\random-ass-raylib-project\\main.csproj",
+  "projectFilePath": "C:\\Users\\PC\\OneDrive - HTL Vöcklabruck\\Desktop\\PJHQ\\random-ass-raylib-project\\main.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\benja\\.nuget\\packages\\raylib-cs\\7.0.1\\raylib-cs.7.0.1.nupkg.sha512"
+    "C:\\Users\\PC\\.nuget\\packages\\raylib-cs\\7.0.1\\raylib-cs.7.0.1.nupkg.sha512"
   ],
   "logs": []
 }

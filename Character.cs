@@ -8,8 +8,8 @@ internal class Character
     public Raylib_cs.Rectangle CharacterRect { get; private set; }
     public double Speed { get; set; } = 5;
     public int Kills { get; set; } = 0;
-    public int Health { get; set; } = 100;
-
+    public float Health { get; set; } = 100;
+    public double Regeneration { get; set; } = 0;
     public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
 
     public Character()
