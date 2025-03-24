@@ -39,6 +39,7 @@ namespace main
                     cPointReq += (((cPointReq * 0.25f)) * kd) + 100;
                     kd += 0.025f;
                     cSpeedIncrease = (float)Math.Log(5 / ((double)character.Kills / 100 + 1f));
+                    character.Regeneration += Math.Log(1)*Math.Pow(Math.E, -kd);
                     character.Speed += cSpeedIncrease;
                     character.Health += (int) ((float)Math.Pow(Math.E, character.Score*0.01) * Math.Log(5 / (float)character.Kills / 1000 +1f));
                 }
@@ -139,7 +140,7 @@ namespace main
             Raylib.DrawText($"Score: {character.Score}", width / 2 - 50, height / 2 - 50, 20, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Kills: {character.Kills}", width / 2 - 50, height / 2 - 25, 20, Raylib_cs.Color.Red);
             Raylib.DrawText($"Speed: {Math.Round(character.Speed, 1)}", width / 2 - 50, height / 2, 20, Raylib_cs.Color.SkyBlue);
-            Raylib.DrawText($"Speed: {character.Regeneration:00}", width / 2 - 50, height / 2, 20, Raylib_cs.Color.DarkPurple);
+            Raylib.DrawText($"Regeneration: {character.Regeneration,00}", width / 2 - 50, height / 2 + 50 , 20, Raylib_cs.Color.DarkPurple);
             Raylib.DrawText($"Health: {Math.Round(character.Health,0)}", width / 2 - 50, height / 2 + 25, 20, Raylib_cs.Color.Green);
         }
     }
