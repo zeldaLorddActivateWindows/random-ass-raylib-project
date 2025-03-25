@@ -36,12 +36,12 @@ namespace main
 
                 if (character.Score > cPointReq)
                 {
-                    cPointReq += (((cPointReq * 0.25f)) * kd) + 100;
+                    cPointReq += (cPointReq * 0.25f) + 100;
                     kd += 0.025f;
                     cSpeedIncrease = (float)Math.Log(5 / ((double)character.Kills / 100 + 1f));
-                    character.Regeneration += Math.Log(1)*Math.Pow(Math.E, -kd);
+                    character.Regeneration += Math.Log(1) * Math.Exp(-kd);
                     character.Speed += cSpeedIncrease;
-                    character.Health += (int) ((float)Math.Pow(Math.E, character.Score*0.01) * Math.Log(5 / (float)character.Kills / 1000 +1f));
+                    character.Health += (int)(Math.Exp(character.Score * 0.01) * Math.Log(5 / ((float)character.Kills / 1000 + 1f)));
                 }
             };
 
@@ -66,13 +66,12 @@ namespace main
 
                     Parallel.ForEach(enemies, enemy => enemy.Update());
 
-
                     var enemiesToRemove = new List<Enemy>();
                     foreach (var enemy in enemies)
                     {
                         if (enemy.EnemyRect.Y > height)
                         {
-                            character.Health =- enemy.EnemyRect.X * 0.1f;
+                            character.Health -= enemy.EnemyRect.Width * 0.1f;
                             enemiesToRemove.Add(enemy);
                         }
                     }
@@ -134,14 +133,14 @@ namespace main
             Raylib.DrawText($"Additional speed: +{Math.Round(character.Speed - 5, 1)}", 10, 85, 20, Raylib_cs.Color.SkyBlue);
         }
 
-        protected static void DisplayPauseInfo(Character character) //protected modifier for fun idk lol
+        protected static void DisplayPauseInfo(Character character)
         {
             Raylib.DrawText("PAUSED", width / 2 - 50, height / 2 - 100, 40, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Score: {character.Score}", width / 2 - 50, height / 2 - 50, 20, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Kills: {character.Kills}", width / 2 - 50, height / 2 - 25, 20, Raylib_cs.Color.Red);
             Raylib.DrawText($"Speed: {Math.Round(character.Speed, 1)}", width / 2 - 50, height / 2, 20, Raylib_cs.Color.SkyBlue);
-            Raylib.DrawText($"Regeneration: {character.Regeneration,00}", width / 2 - 50, height / 2 + 50 , 20, Raylib_cs.Color.DarkPurple);
-            Raylib.DrawText($"Health: {Math.Round(character.Health,0)}", width / 2 - 50, height / 2 + 25, 20, Raylib_cs.Color.Green);
+            Raylib.DrawText($"Regeneration: {character.Regeneration:00}", width / 2 - 50, height / 2 + 50, 20, Raylib_cs.Color.DarkPurple);
+            Raylib.DrawText($"Health: {Math.Round(character.Health, 0)}", width / 2 - 50, height / 2 + 25, 20, Raylib_cs.Color.Green);
         }
     }
 }
