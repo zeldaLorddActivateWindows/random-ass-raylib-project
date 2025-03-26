@@ -94,9 +94,6 @@ namespace main
 
                     DisplayInfo(character, cPointReq);
 
-                    Raylib.DrawLine(center.X + width / 2, center.Y, center.X - width / 2, center.Y, Raylib_cs.Color.Gold);
-                    Raylib.DrawLine(center.X, center.Y + height / 2, center.X, center.Y - height / 2, Raylib_cs.Color.Gold);
-
                     foreach (var enemy in enemies)
                     {
                         enemy.Draw();
