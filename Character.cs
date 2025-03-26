@@ -11,6 +11,7 @@ internal class Character
     public float Health { get; set; } = 100;
     public double Regeneration { get; set; } = 0;
     public event EventHandler<EnemyKilledEventArgs> EnemyKilled;
+    public int Prestige { get; set; } = 0;
 
     public Character()
     {

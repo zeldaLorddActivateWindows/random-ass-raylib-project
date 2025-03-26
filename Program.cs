@@ -131,6 +131,12 @@ namespace main
                     DisplayPauseInfo(character, availablePoints);
                     Raylib.EndDrawing();
                 }
+                if (character.Kills > 100)
+                {
+                    foreach (var item in enemies) item.Velocity++;
+                    character.Prestige++;
+                    character.Kills = 0;
+                }
             }
 
             Raylib.CloseWindow();
@@ -140,8 +146,9 @@ namespace main
         {
             Raylib.DrawText($"Score: {character.Score:00000}", 10, 10, 20, Raylib_cs.Color.RayWhite);
             Raylib.DrawText($"Kills: {character.Kills}", 10, 35, 20, Raylib_cs.Color.Red);
-            Raylib.DrawText($"Points until next upgrade: {(int)cPointReq - character.Score}", 10, 60, 20, Raylib_cs.Color.Gold);
+            Raylib.DrawText($"Points until next upgrade: {(int)cPointReq - character.Score}", 10, 60, 20, Raylib_cs.Color.Yellow);
             Raylib.DrawText($"Available Points: {availablePoints}", 10, 85, 20, Raylib_cs.Color.SkyBlue);
+            Raylib.DrawText($"Current Prestige: {character.Prestige}", 10 ,110, 20, Raylib_cs.Color.Gold);
         }
 
         protected static void DisplayPauseInfo(Character character, int availablePoints)
