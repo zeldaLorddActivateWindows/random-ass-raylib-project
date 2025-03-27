@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Threading.Tasks;
 using Raylib_cs;
@@ -136,6 +137,14 @@ namespace main
                     foreach (var item in enemies) item.Velocity++;
                     character.Prestige++;
                     character.Kills = 0;
+                }
+                if (character.Health >= 0)
+                {
+                    while(Raylib.GetKeyPressed() != (int)KeyboardKey.Enter)
+                    {
+                        Raylib.DrawText($"GAME OVER", width/2, height/2, 15, Raylib_cs.Color.RayWhite);
+                        enemies.Clear();
+                    }
                 }
             }
 
